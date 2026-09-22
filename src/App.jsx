@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { v7 as uuidv7 } from 'uuid';
 
 // Fix 1: Menghapus Inline API key (security fix)
 
@@ -29,9 +29,9 @@ function App() {
       return
     }
     
-    // Issue 6: Menggunakan Date.now() sebagai ID (bisa collision)
+    // Fix 6: Menggunakan UUIDv7 sebagai ID, pengganti Date.now() (untuk mencegah collision)
     const newTodo = {
-      id: Date.now(),
+      id: uuidv7(),
       text: input,
       completed: false,
       createdAt: new Date().toISOString()
