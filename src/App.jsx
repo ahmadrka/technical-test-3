@@ -78,10 +78,13 @@ function App() {
     <div className="app">
       <h1>My Todo List</h1>
       
-      {/* Issue 11: Tidak ada label untuk accessibility */}
-      <div className="input-section">
+      {/* Fix 11: Menambahkan label untuk accessibility */}
+      <div className='input-section'>
+        <label htmlFor='todo-input'>
+          Insert your todo here
         <input 
-          type="text"
+            id='todo-input'
+            type='text'
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyPress={(e) => {
@@ -91,6 +94,7 @@ function App() {
           }}
           placeholder="What needs to be done?"
         />
+        </label>
         <button onClick={addTodo}>Add</button>
       </div>
       
