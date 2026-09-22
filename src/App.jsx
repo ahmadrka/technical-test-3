@@ -98,23 +98,23 @@ function App() {
         <button onClick={addTodo}>Add</button>
       </div>
       
-      {/* Issue 12: Inline styles (inconsistent dengan CSS file) */}
-      <div style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
+      {/* Fix 12: Menggunakan conditional className */}
+      <div className='filter-section'>
         <button 
           onClick={() => setFilter('all')}
-          style={{ background: filter === 'all' ? '#28a745' : '#007bff' }}
+          className={filter === 'all' ? 'selected' : ''}
         >
           All
         </button>
         <button 
           onClick={() => setFilter('active')}
-          style={{ background: filter === 'active' ? '#28a745' : '#007bff' }}
+          className={filter === 'active' ? 'selected' : ''}
         >
           Active
         </button>
         <button 
           onClick={() => setFilter('completed')}
-          style={{ background: filter === 'completed' ? '#28a745' : '#007bff' }}
+          className={filter === 'completed' ? 'selected' : ''}
         >
           Completed
         </button>
