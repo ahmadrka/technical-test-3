@@ -41,9 +41,12 @@ function App() {
     setInput('')
   }
   
-  // Issue 7: Tidak ada error handling
+  // Fix 7: Menambahkan error handling
   const deleteTodo = (id) => {
-    setTodos(todos.filter(todo => todo.id !== id))
+    try {
+      setTodos(todos.filter((todo) => todo.id !== id));
+    } catch (error) {
+      console.error('Error deleting todo:', error);
   }
   
   const toggleTodo = (id) => {
