@@ -82,10 +82,10 @@ function App() {
       
       {/* Fix 11: Menambahkan label untuk accessibility */}
       <div className='input-section'>
-        <label htmlFor='todo-input'>
-          Insert your todo here
+        <label>
+          <span id='todo-input'>Insert your todo here</span>
         <input 
-            id='todo-input'
+            aria-labelledby='todo-input'
             type='text'
           value={input}
           onChange={(e) => setInput(e.target.value)}
