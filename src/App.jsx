@@ -71,13 +71,37 @@ function App() {
   // Issue 9: Calculation yang tidak perlu di setiap render
   const stats = {
     total: todos.length,
-    completed: todos.filter(t => t.completed).length,
-    active: todos.filter(t => !t.completed).length
-  }
-  
-  // Issue 10: Inline event handler dengan arrow function (re-create setiap render)
+      completed: todos.filter((t) => t.completed).length,
+      active: todos.filter((t) => !t.completed).length,
+    };
+  }, [todos]);
+
+  // Fix 10: Memisahkan inline event handler dengan arrow function (re-create setiap render) menjadi function terpisah dengan bantuan useCallback
+  const handleInputChange = useCallback((e) => {
+    setInput(e.target.value);
+  }, []);
+
+  const handleInputKeyPress = useCallback(
+    (e) => {
+      if (e.key === 'Enter') {
+        addTodo(e.target.value);
+      }
+    },
+    [addTodo],
+  );
+
+  const handleAddClick = useCallback(() => {
+    addTodo(input);
+  }, [addTodo, input]);
+
+  const handleFilterChange = useCallback((e) => {
+    const value = e.target.dataset.filter;
+    setFilter(value);
+  }, []);
+
+  // Fix 10: Inline event handler dengan arrow function (re-create setiap render) sudah dipisahkan menjadi function terpisah dengan bantuan useCallback
   return (
-    <div className="app">
+    <div className='app'>
       <h1>My Todo List</h1>
       
       {/* Fix 11: Menambahkan label untuk accessibility */}
@@ -88,57 +112,59 @@ function App() {
             aria-labelledby='todo-input'
             type='text'
           value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyPress={(e) => {
-            if (e.key === 'Enter') {
-              addTodo()
-            }
-          }}
-          placeholder="What needs to be done?"
+            onChange={handleInputChange}
+            onKeyPress={handleInputKeyPress}
+            placeholder='What needs to be done?'
         />
         </label>
-        <button onClick={addTodo}>Add</button>
+        <button onClick={handleAddClick}>Add</button>
       </div>
       
       {/* Fix 12: Menggunakan conditional className */}
       <div className='filter-section'>
         <button 
-          onClick={() => setFilter('all')}
+          onClick={handleFilterChange}
+          data-filter='all'
           className={filter === 'all' ? 'selected' : ''}
         >
           All
         </button>
         <button 
-          onClick={() => setFilter('active')}
+          onClick={handleFilterChange}
+          data-filter='active'
           className={filter === 'active' ? 'selected' : ''}
         >
           Active
         </button>
         <button 
-          onClick={() => setFilter('completed')}
+          onClick={handleFilterChange}
+          data-filter='completed'
           className={filter === 'completed' ? 'selected' : ''}
         >
           Completed
         </button>
       </div>
       
-      <div className="todo-list">
+      <div className='todo-list'>
         {/* Fix 13: Menambahkan handling untuk empty state */}
-        {getFilteredTodos().length === 0 ? (
+        {getFilteredTodos.length === 0 ? (
           <p>No todos found</p>
         ) : (
-getFilteredTodos().map((todo) => (
-          // Issue 14: Key menggunakan index bisa lebih baik dengan ID
-          <div key={todo.id} className={`todo-item ${todo.completed ? 'completed' : ''}`}>
+          getFilteredTodos.map((todo) => (
+            // Fix 14: Key menggunakan ID
+            <div
+              key={todo.id}
+              className={`todo-item ${todo.completed ? 'completed' : ''}`}
+            >
             <input 
-              type="checkbox"
+                type='checkbox'
               checked={todo.completed}
               onChange={() => toggleTodo(todo.id)}
             />
               {/* Fix 15: Mengatasi potential XSS jika text dari user input */}
               <span>{todo.text}</span>
             <button 
-              className="delete-btn"
+                className='delete-btn'
               onClick={() => deleteTodo(todo.id)}
             >
               Delete
@@ -148,13 +174,16 @@ getFilteredTodos().map((todo) => (
         )}
       </div>
       
-      <div className="stats">
-        <p>Total: {stats.total} | Active: {stats.active} | Completed: {stats.completed}</p>
+      <div className='stats'>
+        <p>
+          Total: {stats.total} | Active: {stats.active} | Completed:{' '}
+          {stats.completed}
+        </p>
       </div>
       
       {/* Fix 16: Menghapus debug code yang tertinggal */}
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
